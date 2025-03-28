@@ -1,0 +1,62 @@
+[
+  {
+    "name": "Shasta Lake",
+    "cdecId": "SHA",
+    "startDate": "2025-01-01",
+    "endDate": "2025-12-31"
+  },
+  {
+    "name": "Lake Oroville",
+    "cdecId": "ORO",
+    "startDate": "2025-01-01",
+    "endDate": "2025-12-31"
+  },
+  {
+    "name": "Trinity Lake",
+    "cdecId": "CLE",
+    "startDate": "2025-01-01",
+    "endDate": "2025-12-31"
+  },
+  {
+    "name": "New Melones Lake",
+    "cdecId": "NML",
+    "startDate": "2025-01-01",
+    "endDate": "2025-12-31"
+  },
+  {
+    "name": "San Luis Reservoir",
+    "cdecId": "SNL",
+    "startDate": "2025-01-01",
+    "endDate": "2025-12-31"
+  },
+  {
+    "name": "Don Pedro Reservoir",
+    "cdecId": "DNP",
+    "startDate": "2025-01-01",
+    "endDate": "2025-12-31"
+  },
+  {
+    "name": "Lake Berryessa",
+    "cdecId": "BER",
+    "startDate": "2025-01-01",
+    "endDate": "2025-12-31"
+  },
+  {
+    "name": "Folsom Lake",
+    "cdecId": "FOL",
+    "startDate": "2025-01-01",
+    "endDate": "2025-12-31"
+  },
+  {
+    "name": "New Bullards Bar Reservoir",
+    "cdecId": "BUL",
+    "startDate": "2025-01-01",
+    "endDate": "2025-12-31"
+  },
+  {
+    "name": "Pine Flat Lake",
+    "cdecId": "PNF",
+    "startDate": "2025-01-01",
+    "endDate": "2025-12-31"
+  }
+]
