@@ -48,29 +48,31 @@ def on_message(client, userdata, msg):
 
     try:
         data = json.loads(msg.payload.decode())
-        station_id = data["STATION_ID"]
-        duration = data["DURATION"]
-        sensor_number = data["SENSOR_NUMBER"]
-        sensor_type = data["SENSOR_TYPE"]
-        date_time = data["DATE_TIME"]
-        obs_date = data["OBS_DATE"]
-        value = data["VALUE"]
-        data_flag = data.get("DATA_FLAG", "")
-        units = data["UNITS"]
+
+        # Parse fields for filtered_data
+        obs_date_raw = data.get("OBS_DATE", "")  # Ex: "20220102 0000"
+        if not obs_date_raw:
+            raise ValueError("Missing OBS_DATE in payload")
+
+        # Extract date part and convert to 'YYYY-MM-DD'
+        obs_date = obs_date_raw[:8]  # "20220102"
+        date = f"{obs_date[:4]}-{obs_date[4:6]}-{obs_date[6:]}"  # → "2022-01-02"
+
+        cdec_id = data["STATION_ID"]
+        feet = float(data["VALUE"])
 
         sql = """
-            INSERT INTO reservoir_data 
-            (STATION_ID, DURATION, SENSOR_NUMBER, SENSOR_TYPE, DATE_TIME, OBS_DATE, VALUE, DATA_FLAG, UNITS)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO filtered_data (date, cdec_id, feet)
+            VALUES (%s, %s, %s)
         """
-        values = (station_id, duration, sensor_number, sensor_type, date_time, obs_date, value, data_flag, units)
+        values = (date, cdec_id, feet)
         cursor.execute(sql, values)
         db.commit()
 
-        print("✅ Inserted into DB")
+        print("✅ Inserted into filtered_data")
 
     except Exception as e:
-        print("Error processing message:", e)
+        print("Error inserting into filtered_data:", e)
 
 def main():
     client = mqtt.Client()
