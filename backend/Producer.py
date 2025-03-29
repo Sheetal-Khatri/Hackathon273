@@ -15,10 +15,10 @@ CONFIG_FILE = "reservoir_configs.json"
 
 # MySQL connection parameters – update these for your environment
 MYSQL_CONFIG = {
-    "host": "127.0.0.1",
-    "user": "aditya",
-    "password": "cm9vdA==",
-    "database": "reservoir_database"
+    "host": "reservoir-db.c1sk2imgwsr1.us-west-1.rds.amazonaws.com",
+    "user": "admin",
+    "password": "hackathoncmpe273",
+    "database": "reservoir"
 }
 
 @app.route("/api/configs", methods=["POST"])
@@ -93,14 +93,15 @@ def run_configs():
         start_date = reservoir.get("startDate")
         end_date = reservoir.get("endDate")
         topic_name = f"station-{cdec_id}"
+        print('topic_names are:',topic_name)
 
         results[cdec_id] = {"topic": topic_name, "records_published": 0}
 
         # SQL query: Assumes a table 'reservoir_data' with columns: date, cdec_id, feet
         query = """
-            SELECT date, feet FROM reservoir_data
-            WHERE cdec_id = %s AND date BETWEEN %s AND %s
-            ORDER BY date ASC
+            SELECT DATE_TIME, VALUE FROM reservoir_master_data
+            WHERE STATION_ID = %s AND DATE_TIME BETWEEN %s AND %s
+            ORDER BY DATE_TIME ASC
         """
         try:
             cursor.execute(query, (cdec_id, start_date, end_date))
@@ -111,9 +112,14 @@ def run_configs():
 
         # Publish each record to the MQTT topic
         for row in rows:
+            # Check if the VALUE is None; if so, set feet_value to None or a default value (e.g. 0.0)
+            if row[1] is None:
+                feet_value = 0.0  # or you can use 0.0 if that's preferred
+            else:
+                feet_value = float(row[1])
             message = {
                 "DATE": row[0].strftime("%Y-%m-%d") if hasattr(row[0], 'strftime') else row[0],
-                "FEET": float(row[1])
+                "FEET": feet_value
             }
             mqtt_client.publish(topic_name, json.dumps(message))
             results[cdec_id]["records_published"] += 1
